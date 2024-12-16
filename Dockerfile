@@ -4,11 +4,14 @@ FROM n8nio/n8n:latest
 # Switch to root user to install additional packages
 USER root
 
-# Update package lists and install FFmpeg
+# Update package lists and install required dependencies
 RUN apt-get update && \
-    apt-get install -y ffmpeg && \
+    apt-get install -y ffmpeg curl build-essential && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Install Node.js dependencies globally
+RUN npm install -g ws express dotenv
 
 # Revert to the n8n user
 USER node
@@ -18,6 +21,3 @@ WORKDIR /data
 
 # Expose the default n8n port
 EXPOSE 5678
-
-# Define the command to run n8n
-CMD ["n8n"]
